@@ -1,0 +1,135 @@
+#include <iostream>
+#include <cstring>
+
+class MyClass {
+public:
+    int* data;
+    int size;
+
+    MyClass(int size) : size(size) {
+        data = new int[size];
+    }
+
+    MyClass(const MyClass& other) : size(other.size) {
+        data = other.data;  // Shallow copy the pointer
+    }
+
+    ~MyClass() {
+        delete[] data;
+    }
+};
+
+int main() {
+    MyClass original(3);
+    original.data[0] = 1;
+    original.data[1] = 2;
+    original.data[2] = 3;
+
+    MyClass shallowCopy = original;
+
+    shallowCopy.data[0] = 99;  // Modifying the shallow copy
+    std::cout << original.data[0] << std::endl;  // This will also output 99
+    return 0;
+}#include <iostream>
+#include <cstring>
+
+class Course {
+public:
+    char* courseName;
+    int* studentIds;
+    int numStudents;
+
+    // Deep Copy Constructor
+    Course(const Course& other) {
+        // Copy courseName (assuming it's a C-style string)
+        courseName = new char[strlen(other.courseName) + 1];
+        std::strcpy(courseName, other.courseName);
+
+        // Copy studentIds and numStudents
+        numStudents = other.numStudents;
+        studentIds = new int[numStudents];
+        for (int i = 0; i < numStudents; i++) {
+            studentIds[i] = other.studentIds[i];
+        }
+    }
+
+    // Constructor
+    Course(const char* name, const int* students, int num) {
+        courseName = new char[strlen(name) + 1];
+        std::strcpy(courseName, name);
+
+        numStudents = num;
+        studentIds = new int[num];
+        for (int i = 0; i < num; i++) {
+            studentIds[i] = students[i];
+        }
+    }
+
+    // Destructor
+    ~Course() {
+        delete[] courseName;
+        delete[] studentIds;
+    }
+
+    // Drop a student by ID
+    void dropStudent(int studentId) {
+        // Implement the logic to remove a student from the studentIds array
+        // You need to shift the remaining elements and reduce numStudents accordingly
+        // Ensure you also check if the studentId is valid before attempting to drop.
+    }
+};
+
+int main() {
+    const char* courseName = "Math";
+    int students[] = {101, 102, 103};
+    Course mathCourse(courseName, students, 3);
+
+    Course copyOfMath(mathCourse); // Deep copy using the copy constructor
+
+    // Implement and call the dropStudent() function as needed.
+
+    // Don't forget to delete dynamically allocated memory in the destructors.
+
+    return 0;
+}#include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
+
+int main() {
+    // Open the input file
+    std::ifstream inputFile("shoppingList.txt");
+    
+    if (!inputFile.is_open()) {
+        std::cerr << "Error opening the input file." << std::endl;
+        return 1;
+    }
+
+    std::string line;
+    double total = 0.0;
+
+    // Read and process each line in the file
+    while (std::getline(inputFile, line)) {
+        std::string product;
+        double price;
+
+        // Use stringstream to parse the line
+        std::stringstream lineStream(line);
+        std::getline(lineStream, product, ',');
+        lineStream >> price;
+
+        // Display product information
+        std::cout << "Product: " << product << " Price: $" << price << std::endl;
+
+        // Update the total price
+        total += price;
+    }
+
+    // Close the input file
+    inputFile.close();
+
+    // Display the total price
+    std::cout << "Total Price: $" << total << std::endl;
+
+    return 0;
+}
